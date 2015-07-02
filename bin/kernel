@@ -1,0 +1,33 @@
+#!/bin/sh
+
+clone_and_build() {
+  git clone https://github.com/convox/$1
+  cd $1
+  docker build -t convox/$1:$2
+}
+
+set -e
+
+docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+tag=$(date +%Y%m%d%H%M%S)
+
+mkdir -p /tmp/release
+cd /tmp/release
+
+clone_and_build app $tag
+clone_and_build agent $tag
+clone_and_build kernel $tag
+clone_and_build registry $tag
+
+docker push convox/app:$tag
+docker push convox/agent:$tag
+docker push convox/kernel:$tag
+docker push convox/registry:$tag
+
+docker tag -f convox/app:$tag convox/app:latest
+docker tag -f convox/agent:$tag convox/agent:latest
+docker tag -f convox/kernel:$tag convox/kernel:latest
+docker tag -f convox/registry:$tag convox/registry:latest
+
+echo "released: $tag"

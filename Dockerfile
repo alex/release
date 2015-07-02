@@ -1,7 +1,12 @@
 FROM convox/alpine:3.1
 
-RUN apk-install docker git
+RUN apk-install docker go git
 
-COPY bin/release /usr/local/bin/release
+ENV GOPATH /go
+ENV PATH $PATH:/go/src/github.com/convox/release/bin
 
-CMD ["/usr/local/bin/release"]
+COPY . /go/src/github.com/convox/release
+WORKDIR /go/src/github.com/convox/release
+RUN go get .
+
+CMD ["/go/bin/release"]
