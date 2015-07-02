@@ -2,8 +2,7 @@
 
 clone_and_build() {
   git clone https://github.com/convox/$1
-  cd $1
-  docker build -t convox/$1:$2
+  docker build -t convox/$1:$2 $1
 }
 
 set -e
@@ -16,17 +15,14 @@ mkdir -p /tmp/release
 cd /tmp/release
 
 clone_and_build app $tag
-clone_and_build agent $tag
 clone_and_build kernel $tag
 clone_and_build registry $tag
 
 docker push convox/app:$tag
-docker push convox/agent:$tag
 docker push convox/kernel:$tag
 docker push convox/registry:$tag
 
 docker tag -f convox/app:$tag convox/app:latest
-docker tag -f convox/agent:$tag convox/agent:latest
 docker tag -f convox/kernel:$tag convox/kernel:latest
 docker tag -f convox/registry:$tag convox/registry:latest
 
