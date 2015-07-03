@@ -34,7 +34,10 @@ for line in gitobj.stdout:
         if file in filelist:
             filelist.remove(file)
             #print mtime, file
-            os.utime(file, (mtime, mtime))
+            try:
+              os.utime(file, (mtime, mtime))
+            except:
+              pass
     else:
         mtime = long(line)
 
