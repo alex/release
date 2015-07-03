@@ -2,7 +2,9 @@
 
 clone_and_build() {
   git clone https://github.com/convox/$1
-  docker build -t convox/$1:$2 $1
+  cd $1
+  /usr/bin/git-restore-mtime .
+  docker build -t convox/$1:$2 .
 }
 
 set -e
