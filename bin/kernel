@@ -17,14 +17,17 @@ mkdir -p /tmp/release
 cd /tmp/release
 
 clone_and_build app $tag
+clone_and_build build $tag
 clone_and_build kernel $tag
 clone_and_build registry $tag
 
 docker push convox/app:$tag
+docker push convox/build:$tag
 docker push convox/kernel:$tag
 docker push convox/registry:$tag
 
 docker tag -f convox/app:$tag convox/app:latest
+docker tag -f convox/build:$tag convox/build:latest
 docker tag -f convox/kernel:$tag convox/kernel:latest
 docker tag -f convox/registry:$tag convox/registry:latest
 
