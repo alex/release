@@ -1,0 +1,20 @@
+#!/bin/sh
+
+git_clone() {
+  git clone https://github.com/convox/$1
+  cd $1
+  /usr/bin/git-restore-mtime .
+}
+
+set -e
+
+mkdir -p $GOPATH/src/github.com/convox
+cd $GOPATH/src/github.com/convox
+git_clone cli
+
+version=$(cat convox/main.go | grep "var Version =" | cut -d'"' -f2)
+
+equinox release --equinox-account=$EQUINOX_ACCOUNT --equinox-secret=$EQUINOX_SECRET \
+  --equinox-app=$EQUINOX_APP --channel=stable --version=$version ./convox
+
+echo "released: $version"
