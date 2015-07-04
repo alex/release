@@ -7,6 +7,11 @@ clone_and_build() {
   docker build -t convox/$1:$2 .
 }
 
+tag_latest() {
+  docker tag -f convox/$1:$2 convox/$1:latest
+  docker push convox/$1:latest
+}
+
 set -e
 
 docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -26,9 +31,9 @@ docker push convox/build:$tag
 docker push convox/kernel:$tag
 docker push convox/registry:$tag
 
-docker tag -f convox/app:$tag convox/app:latest
-docker tag -f convox/build:$tag convox/build:latest
-docker tag -f convox/kernel:$tag convox/kernel:latest
-docker tag -f convox/registry:$tag convox/registry:latest
+tag_latest app $tag
+tag_latest build $tag
+tag_latest kernel $tag
+tag_latest registry $tag
 
 echo "released: $tag"
