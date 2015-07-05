@@ -36,4 +36,6 @@ tag_latest build $tag
 tag_latest kernel $tag
 tag_latest registry $tag
 
-echo "released: $tag"
+echo "kernel released: $tag"
+
+curl -X POST -d "payload={\"text\":\"kernel released: $tag\"}" $SLACK_WEBHOOK_URL

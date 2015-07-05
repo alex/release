@@ -16,9 +16,9 @@ tag=$(date +%Y%m%d%H%M%S)
 
 sed -i -e "s/\"dev\"/\"${tag}\"/g" convox/main.go
 
-cat convox/main.go
-
 equinox release --equinox-account=$EQUINOX_ACCOUNT --equinox-secret=$EQUINOX_SECRET \
   --equinox-app=$EQUINOX_APP --channel=stable --version=$tag ./convox
 
-echo "released: $tag"
+echo "cli released: $tag"
+
+curl -X POST -d "payload={\"text\":\"cli released: $tag\"}" $SLACK_WEBHOOK_URL
