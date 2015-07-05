@@ -12,9 +12,13 @@ mkdir -p $GOPATH/src/github.com/convox
 cd $GOPATH/src/github.com/convox
 git_clone cli
 
-version=$(cat convox/main.go | grep "var Version =" | cut -d'"' -f2)
+tag=$(date +%Y%m%d%H%M%S)
+
+sed -i -e "s/\"dev\"/\"${tag}\"/g" convox/main.go
+
+cat convox/main.go
 
 equinox release --equinox-account=$EQUINOX_ACCOUNT --equinox-secret=$EQUINOX_SECRET \
-  --equinox-app=$EQUINOX_APP --channel=stable --version=$version ./convox
+  --equinox-app=$EQUINOX_APP --channel=stable --version=$tag ./convox
 
-echo "released: $version"
+echo "released: $tag"
