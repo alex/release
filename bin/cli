@@ -21,4 +21,4 @@ equinox release --equinox-account=$EQUINOX_ACCOUNT --equinox-secret=$EQUINOX_SEC
 
 echo "cli released: $tag"
 
-curl -X POST -d "payload={\"text\":\"cli released: $tag\"}" $SLACK_WEBHOOK_URL
+curl -s -X POST -d "payload={\"text\":\"cli released: $tag\"}" $SLACK_WEBHOOK_URL
