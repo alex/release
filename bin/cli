@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 git_clone() {
   git clone https://github.com/convox/$1

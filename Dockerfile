@@ -1,9 +1,18 @@
-FROM convox/alpine:3.1
+FROM ubuntu:14.04
 
-RUN apk-install docker go git python
+RUN apt-get -y update
+
+RUN apt-get -y install docker.io git python
+
+RUN apt-get -y install golang \
+  golang-go-darwin-386 golang-go-darwin-amd64 \
+  golang-go-linux-386 golang-go-linux-amd64 golang-go-linux-arm \
+  golang-go-windows-386 golang-go-windows-amd64
 
 ENV GOPATH /go
 ENV PATH $PATH:/go/src/github.com/convox/release/bin
+
+RUN apt-get install -y curl unzip
 
 WORKDIR /tmp
 RUN curl -Ls 'https://api.equinox.io/1/Applications/ap_y4Se864kD0m4rFttBjDpTeahC1/Updates/Asset/equinox.zip?os=linux&arch=386&channel=stable' -o equinox.zip
