@@ -19,6 +19,8 @@ RUN curl -Ls 'https://api.equinox.io/1/Applications/ap_y4Se864kD0m4rFttBjDpTeahC
 RUN unzip equinox.zip
 RUN cp equinox /usr/bin/equinox
 
+RUN go get github.com/jteeuwen/go-bindata/...
+
 COPY bin/git-restore-mtime /usr/bin/git-restore-mtime
 
 EXPOSE 5000
