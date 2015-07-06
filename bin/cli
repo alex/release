@@ -16,7 +16,7 @@ tag=$(date +%Y%m%d%H%M%S)
 
 sed -i -e "s/\"dev\"/\"${tag}\"/g" convox/main.go
 
-go-bindata -o convox/asset.go -prefix convox convox/data
+/go/bin/go-bindata -o convox/asset.go -prefix convox convox/data
 
 equinox release --equinox-account=$EQUINOX_ACCOUNT --equinox-secret=$EQUINOX_SECRET \
   --equinox-app=$EQUINOX_APP --channel=stable --version=$tag ./convox
