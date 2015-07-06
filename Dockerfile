@@ -21,6 +21,8 @@ RUN cp equinox /usr/bin/equinox
 
 COPY bin/git-restore-mtime /usr/bin/git-restore-mtime
 
+EXPOSE 5000
+
 COPY . /go/src/github.com/convox/release
 WORKDIR /go/src/github.com/convox/release
 RUN go get .
