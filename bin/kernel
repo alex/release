@@ -26,6 +26,8 @@ clone_and_build build $tag
 clone_and_build kernel $tag
 clone_and_build registry $tag
 
+cd kernel/cmd/formation && make release VERSION=$(tag)
+
 docker push convox/app:$tag
 docker push convox/build:$tag
 docker push convox/kernel:$tag
