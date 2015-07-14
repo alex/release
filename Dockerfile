@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:15.04
 
 RUN apt-get -y update
 
@@ -18,6 +18,9 @@ WORKDIR /tmp
 RUN curl -Ls 'https://api.equinox.io/1/Applications/ap_y4Se864kD0m4rFttBjDpTeahC1/Updates/Asset/equinox.zip?os=linux&arch=386&channel=stable' -o equinox.zip
 RUN unzip equinox.zip
 RUN cp equinox /usr/bin/equinox
+
+RUN apt-get -y install make python python-pip zip
+RUN pip install awscli
 
 RUN go get github.com/jteeuwen/go-bindata/...
 
