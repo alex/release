@@ -28,7 +28,11 @@ clone_and_build build $tag
 clone_and_build kernel $tag
 clone_and_build registry $tag
 
-cd /tmp/clone/kernel/cmd/formation && make release VERSION=$(tag)
+docker run -i \
+  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  -e AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION \
+  convox/kernel:$tag sh -c "cd cmd/formation && make release VERSION=$tag"
 
 docker push convox/app:$tag
 docker push convox/build:$tag
