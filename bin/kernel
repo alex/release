@@ -1,6 +1,8 @@
 #!/bin/bash
 
 clone_and_build() {
+  mkdir -p /tmp/clone
+  cd /tmp/clone
   git clone https://github.com/convox/$1
   cd $1
   /usr/bin/git-restore-mtime .
@@ -26,7 +28,7 @@ clone_and_build build $tag
 clone_and_build kernel $tag
 clone_and_build registry $tag
 
-cd kernel/cmd/formation && make release VERSION=$(tag)
+cd /tmp/clone/kernel/cmd/formation && make release VERSION=$(tag)
 
 docker push convox/app:$tag
 docker push convox/build:$tag
