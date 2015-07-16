@@ -28,7 +28,10 @@ clone_and_build build $tag
 clone_and_build kernel $tag
 clone_and_build registry $tag
 
-cd /tmp/clone/kernel
+mkdir -p /go
+export GOPATH=/go
+go get github.com/convox/kernel
+cd $GOPATH/src/github.com/convox/kernel
 make release VERSION=$tag
 
 docker push convox/app:$tag
