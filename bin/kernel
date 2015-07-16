@@ -30,7 +30,7 @@ clone_and_build registry $tag
 
 mkdir -p /go
 export GOPATH=/go
-go get github.com/convox/kernel
+go get -u github.com/convox/kernel
 cd $GOPATH/src/github.com/convox/kernel
 make release VERSION=$tag
 
