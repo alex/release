@@ -1,6 +1,7 @@
 release:
   build: .
   environment:
+    - CIRCLE_TOKEN
     - DOCKER_EMAIL
     - DOCKER_USERNAME
     - DOCKER_PASSWORD
