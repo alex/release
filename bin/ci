@@ -1,3 +1,11 @@
 #!/bin/bash
 
-curl -X POST https://circleci.com/api/v1/project/convox/ci/tree/master?circle-token=$CIRCLE_TOKEN
+set -x
+
+VERSION=${1:-latest}
+
+curl \
+  --header "Content-Type: application/json" \
+  --data "{\"build_parameters\": {\"VERSION\": \"$VERSION\"}}" \
+  --request POST \
+  https://circleci.com/api/v1/project/convox/ci/tree/master?circle-token=$CIRCLE_TOKEN
