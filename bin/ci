@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -X POST https://circleci.com/api/v1/project/convox/ci/tree/master?circle-token=$CIRCLE_TOKEN
