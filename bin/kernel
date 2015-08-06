@@ -1,6 +1,10 @@
 #!/bin/bash
 
-LATEST=${LATEST:-yes}
+LATEST=${LATEST:-no}
+
+if [ "$1" == "--latest" ]; then
+  LATEST=yes
+fi
 
 clone_and_build() {
   mkdir -p /tmp/clone
