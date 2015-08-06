@@ -1,5 +1,7 @@
 #!/bin/bash
 
+LATEST=${LATEST:-yes}
+
 clone_and_build() {
   mkdir -p /tmp/clone
   cd /tmp/clone
@@ -32,17 +34,19 @@ mkdir -p /go
 export GOPATH=/go
 go get -u github.com/convox/kernel
 cd $GOPATH/src/github.com/convox/kernel
-make release VERSION=$tag
+make release VERSION=$tag LATEST=${LATEST}
 
 docker push convox/app:$tag
 docker push convox/build:$tag
 docker push convox/kernel:$tag
 docker push convox/registry:$tag
 
-tag_latest app $tag
-tag_latest build $tag
-tag_latest kernel $tag
-tag_latest registry $tag
+if [ "${LATEST}" == "yes" ]; then
+  tag_latest app $tag
+  tag_latest build $tag
+  tag_latest kernel $tag
+  tag_latest registry $tag
+fi
 
 echo "kernel released: $tag"
 
