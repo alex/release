@@ -19,7 +19,7 @@ RUN curl -Ls 'https://api.equinox.io/1/Applications/ap_y4Se864kD0m4rFttBjDpTeahC
 RUN unzip equinox.zip
 RUN cp equinox /usr/bin/equinox
 
-RUN apt-get -y install make python python-pip zip
+RUN apt-get -y install jq make python python-pip zip
 RUN pip install awscli
 
 RUN go get github.com/jteeuwen/go-bindata/...
