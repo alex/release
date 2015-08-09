@@ -9,8 +9,10 @@ Pre-reqs
 * An .env file with AWS, Circle, Docker, Equinox and Slack keys.
 
 ```bash
-$ bin/cli
-$ bin/kernel
+$ make build
+
+$ docker run --env-file=.env convox/release cli
+$ docker run --env-file=.env convox/release kernel
 ```
 
 ## Production
@@ -22,7 +24,7 @@ $ convox run --app release release cli
 $ convox run --app release release kernel
 ```
 
-When CI has passed, you can cut a "latest" release. Every new install will then use this release.
+When CI has passed, you can cut a "latest" release, which every fresh install will use.
 
 ```
 $ convox run --app release release kernel --latest
