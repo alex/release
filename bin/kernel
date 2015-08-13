@@ -59,6 +59,7 @@ mkdir -p /go
 export GOPATH=/go
 go get -u github.com/convox/kernel
 cd $GOPATH/src/github.com/convox/kernel
+[ -n "$BRANCH" ] && git checkout $BRANCH || true
 make release VERSION=$tag LATEST=${LATEST}
 
 docker push convox/app:$tag
