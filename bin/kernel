@@ -1,16 +1,36 @@
 #!/bin/bash
 
-LATEST=${LATEST:-no}
+while [[ $# > 0 ]]
+do
+key="$1"
 
-if [ "$1" == "--latest" ]; then
-  LATEST=yes
-fi
+case $key in
+    --branch)
+    BRANCH="$2"
+    shift # past argument
+    ;;
+    --latest)
+    LATEST=yes
+    ;;
+    *)
+    # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
+# don't allow experimental branches to be tagged as latest
+[ -n "$BRANCH" ] && LATEST=no
 
 clone_and_build() {
   mkdir -p /tmp/clone
   cd /tmp/clone
   git clone https://github.com/convox/$1
   cd $1
+
+  # try to checkout branch, but continue if it doesn't exist
+  [ -n "$BRANCH" ] && git checkout $BRANCH || true
+
   /usr/bin/git-restore-mtime .
   docker build -t convox/$1:$2 .
 }
@@ -25,6 +45,7 @@ set -e
 docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
 tag=$(date +%Y%m%d%H%M%S)
+[ -n "$BRANCH" ] && tag=$tag-$BRANCH
 
 mkdir -p /tmp/release
 cd /tmp/release
