@@ -54,6 +54,7 @@ clone_and_build app $tag
 clone_and_build build $tag
 clone_and_build kernel $tag
 clone_and_build registry $tag
+clone_and_build service $tag
 
 mkdir -p /go
 export GOPATH=/go
@@ -66,12 +67,14 @@ docker push convox/app:$tag
 docker push convox/build:$tag
 docker push convox/kernel:$tag
 docker push convox/registry:$tag
+docker push convox/service:$tag
 
 if [ "${LATEST}" == "yes" ]; then
   tag_latest app $tag
   tag_latest build $tag
   tag_latest kernel $tag
   tag_latest registry $tag
+  tag_latest service $tag
 fi
 
 echo "kernel released: $tag"
