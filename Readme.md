@@ -1,6 +1,8 @@
 # convox/release
 
-Convox release management.
+Convox release management
+
+See [Releases.md](Releases.md) for full release management guidelines.
 
 ## Development
 
