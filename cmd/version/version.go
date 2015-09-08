@@ -86,7 +86,7 @@ func (vs Versions) Find(version string) (Version, error) {
 
 // Append a new version to versions.json file
 func AppendVersion(v Version) (Version, error) {
-	vs, err := getVersions()
+	vs, err := GetVersions()
 
 	if err != nil {
 		return v, err
@@ -100,7 +100,7 @@ func AppendVersion(v Version) (Version, error) {
 }
 
 func UpdateVersion(v Version) (Version, error) {
-	vs, err := getVersions()
+	vs, err := GetVersions()
 
 	if err != nil {
 		return v, err
@@ -158,7 +158,7 @@ func ImportVersions() (Versions, error) {
 	return vs, err
 }
 
-func getVersions() (Versions, error) {
+func GetVersions() (Versions, error) {
 	vs := Versions{}
 
 	S3 := s3.New(&aws.Config{

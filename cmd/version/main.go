@@ -22,7 +22,7 @@ func main() {
 }
 
 func cmdList() {
-	vs, err := getVersions()
+	vs, err := GetVersions()
 
 	if err != nil {
 		fmt.Printf("error: %v\n", err.Error())
