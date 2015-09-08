@@ -10,7 +10,7 @@ RUN apt-get -y install golang \
   golang-go-windows-386 golang-go-windows-amd64
 
 ENV GOPATH /go
-ENV PATH $PATH:/go/src/github.com/convox/release/bin
+ENV PATH $PATH:$GOPATH/bin:/go/src/github.com/convox/release/bin
 
 RUN apt-get install -y curl unzip
 
@@ -30,6 +30,6 @@ EXPOSE 5000
 
 COPY . /go/src/github.com/convox/release
 WORKDIR /go/src/github.com/convox/release
-RUN go get .
+RUN go get ./...
 
 CMD ["/go/bin/release"]
