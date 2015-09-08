@@ -1,12 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestImportVersions(t *testing.T) {
+	t.Skip("Currently only runs with real credentials. Skipping until awsutil integration.")
+
 	vs, err := ImportVersions()
 
 	if err != nil {
@@ -14,23 +17,25 @@ func TestImportVersions(t *testing.T) {
 	}
 
 	latest, err := vs.Latest()
-	assert.Equal(t, "", latest)
+	assert.Equal(t, "", latest.Version)
 	assert.EqualError(t, err, "no published versions")
 }
 
-// func TestAppendVersion(t *testing.T) {
-// 	vs, err := AppendVersion(Version{
-// 		Version:   "5678",
-// 		Published: false,
-// 		Required:  false,
-// 	})
+func TestAppendVersion(t *testing.T) {
+	t.Skip("Currently only runs with real credentials. Skipping until awsutil integration.")
 
-// 	if err != nil {
-// 		t.Error(err)
-// 	}
+	vs, err := AppendVersion(Version{
+		Version:   "5678",
+		Published: false,
+		Required:  false,
+	})
 
-// 	fmt.Printf("%+v\n", vs)
-// }
+	if err != nil {
+		t.Error(err)
+	}
+
+	fmt.Printf("%+v\n", vs)
+}
 
 func TestNext(t *testing.T) {
 	vs := Versions{
@@ -112,7 +117,7 @@ func TestLatest(t *testing.T) {
 	}
 
 	latest, err := vs.Latest()
-	assert.Equal(t, "2", latest)
+	assert.Equal(t, "2", latest.Version)
 	assert.Nil(t, err)
 }
 
@@ -145,6 +150,6 @@ func TestNextBadVersionData(t *testing.T) {
 	}
 
 	latest, err := vs.Latest()
-	assert.Equal(t, "", latest)
+	assert.Equal(t, "", latest.Version)
 	assert.EqualError(t, err, `no published versions`)
 }
