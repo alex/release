@@ -71,22 +71,22 @@ func (vs Versions) Latest() (string, error) {
 }
 
 // Append a new version to versions.json file
-func AppendVersion(v Version) (*Versions, error) {
+func AppendVersion(v Version) (Versions, error) {
 	vs, err := getVersions()
 
 	if err != nil {
 		return nil, err
 	}
 
-	*vs = append(*vs, v)
+	vs = append(vs, v)
 
-	err = putVersions(*vs)
+	err = putVersions(vs)
 
 	return vs, nil
 }
 
 // Walk a bucket to create initial versions.json file
-func ImportVersions() (*Versions, error) {
+func ImportVersions() (Versions, error) {
 	vs := Versions{}
 
 	S3 := s3.New(&aws.Config{
@@ -120,10 +120,10 @@ func ImportVersions() (*Versions, error) {
 
 	err = putVersions(vs)
 
-	return &vs, err
+	return vs, err
 }
 
-func getVersions() (*Versions, error) {
+func getVersions() (Versions, error) {
 	vs := Versions{}
 
 	S3 := s3.New(&aws.Config{
@@ -147,7 +147,7 @@ func getVersions() (*Versions, error) {
 		json.Unmarshal(b, &vs)
 	}
 
-	return &vs, nil
+	return vs, nil
 }
 
 func putVersions(vs Versions) error {

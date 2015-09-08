@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,22 +13,24 @@ func TestImportVersions(t *testing.T) {
 		t.Error(err)
 	}
 
-	fmt.Printf("%+v\n", vs)
+	latest, err := vs.Latest()
+	assert.Equal(t, "", latest)
+	assert.EqualError(t, err, "no published versions")
 }
 
-func TestAppendVersion(t *testing.T) {
-	vs, err := AppendVersion(Version{
-		Version:   "5678",
-		Published: false,
-		Required:  false,
-	})
+// func TestAppendVersion(t *testing.T) {
+// 	vs, err := AppendVersion(Version{
+// 		Version:   "5678",
+// 		Published: false,
+// 		Required:  false,
+// 	})
 
-	if err != nil {
-		t.Error(err)
-	}
+// 	if err != nil {
+// 		t.Error(err)
+// 	}
 
-	fmt.Printf("%+v\n", vs)
-}
+// 	fmt.Printf("%+v\n", vs)
+// }
 
 func TestNext(t *testing.T) {
 	vs := Versions{
