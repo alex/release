@@ -22,6 +22,10 @@ type Version struct {
 
 type Versions []Version
 
+func (v Version) Display() string {
+	return fmt.Sprintf("%s (published: %v, required: %v)", v.Version, v.Published, v.Required)
+}
+
 func (vs Versions) Next(curr string) (string, error) {
 	found := false
 	nextRequired := ""
@@ -58,31 +62,62 @@ func (vs Versions) Next(curr string) (string, error) {
 	return "", fmt.Errorf("current version %q is latest", curr)
 }
 
-func (vs Versions) Latest() (string, error) {
+func (vs Versions) Latest() (Version, error) {
 	for i := len(vs) - 1; i >= 0; i-- {
 		v := vs[i]
 
 		if v.Published {
-			return v.Version, nil
+			return v, nil
 		}
 	}
 
-	return "", fmt.Errorf("no published versions")
+	return Version{}, fmt.Errorf("no published versions")
+}
+
+func (vs Versions) Find(version string) (Version, error) {
+	for _, v := range vs {
+		if v.Version == version {
+			return v, nil
+		}
+	}
+
+	return Version{}, fmt.Errorf("version %q not found", version)
 }
 
 // Append a new version to versions.json file
-func AppendVersion(v Version) (Versions, error) {
+func AppendVersion(v Version) (Version, error) {
 	vs, err := getVersions()
 
 	if err != nil {
-		return nil, err
+		return v, err
 	}
 
 	vs = append(vs, v)
 
 	err = putVersions(vs)
 
-	return vs, nil
+	return v, err
+}
+
+func UpdateVersion(v Version) (Version, error) {
+	vs, err := getVersions()
+
+	if err != nil {
+		return v, err
+	}
+
+	for i, _ := range vs {
+		if vs[i].Version == v.Version {
+			vs[i].Published = v.Published
+			vs[i].Required = v.Required
+
+			err := putVersions(vs)
+
+			return vs[i], err
+		}
+	}
+
+	return v, fmt.Errorf("version %q not found", v.Version)
 }
 
 // Walk a bucket to create initial versions.json file
