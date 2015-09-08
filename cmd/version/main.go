@@ -57,7 +57,7 @@ func cmdCreate(published bool, required bool) {
 	version := flag.Arg(1)
 
 	if version == "" {
-		fmt.Printf("usage: version [-published] [-required] create 20150906195708\n")
+		fmt.Printf("usage: version [-publish] [-require] create 20150906195708\n")
 		os.Exit(1)
 	}
 
@@ -81,12 +81,12 @@ func cmdUpdate(published bool, required bool) {
 	version := flag.Arg(1)
 
 	if version == "" {
-		fmt.Printf("usage: version [-published] [-required] update 20150906195708\n")
+		fmt.Printf("usage: version [-publish] [-require] update 20150906195708\n")
 		os.Exit(1)
 	}
 
 	if required && !published {
-		fmt.Printf("error: can not use `-required` without `-published`\n")
+		fmt.Printf("error: can not use `-require` without `-publish`\n")
 		os.Exit(1)
 	}
 
