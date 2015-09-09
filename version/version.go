@@ -22,8 +22,114 @@ type Version struct {
 
 type Versions []Version
 
+// Get all versions as Versions type
+func All() (Versions, error) {
+	res, err := http.Get("http://convox.s3.amazonaws.com/release/versions.json")
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	b, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	vs := Versions{}
+	json.Unmarshal(b, &vs)
+
+	return vs, nil
+}
+
+// Get latest published version as a string
+func Latest() (string, error) {
+	vs, err := All()
+
+	if err != nil {
+		return "", err
+	}
+
+	v, err := vs.Latest()
+
+	return v.Version, err
+}
+
+// Get next required or latest published version as a string, based on current version string
+func Next(curr string) (string, error) {
+	vs, err := All()
+
+	if err != nil {
+		return "", err
+	}
+
+	v, err := vs.Next(curr)
+
+	return v, err
+}
+
+// Append a new version to versions.json file
+func AppendVersion(v Version) (Version, error) {
+	vs, err := All()
+
+	if err != nil {
+		return v, err
+	}
+
+	vs = append(vs, v)
+
+	err = putVersions(vs)
+
+	return v, err
+}
+
 func (v Version) Display() string {
 	return fmt.Sprintf("%s (published: %v, required: %v)", v.Version, v.Published, v.Required)
+}
+
+func UpdateVersion(v Version) (Version, error) {
+	vs, err := All()
+
+	if err != nil {
+		return v, err
+	}
+
+	for i, _ := range vs {
+		if vs[i].Version == v.Version {
+			vs[i].Published = v.Published
+			vs[i].Required = v.Required
+
+			err := putVersions(vs)
+
+			return vs[i], err
+		}
+	}
+
+	return v, fmt.Errorf("version %q not found", v.Version)
+}
+
+func (vs Versions) Find(version string) (Version, error) {
+	for _, v := range vs {
+		if v.Version == version {
+			return v, nil
+		}
+	}
+
+	return Version{}, fmt.Errorf("version %q not found", version)
+}
+
+func (vs Versions) Latest() (Version, error) {
+	for i := len(vs) - 1; i >= 0; i-- {
+		v := vs[i]
+
+		if v.Published {
+			return v, nil
+		}
+	}
+
+	return Version{}, fmt.Errorf("no published versions")
 }
 
 func (vs Versions) Next(curr string) (string, error) {
@@ -54,98 +160,6 @@ func (vs Versions) Next(curr string) (string, error) {
 	}
 
 	return "", fmt.Errorf("current version %q is latest", curr)
-}
-
-func (vs Versions) Latest() (Version, error) {
-	for i := len(vs) - 1; i >= 0; i-- {
-		v := vs[i]
-
-		if v.Published {
-			return v, nil
-		}
-	}
-
-	return Version{}, fmt.Errorf("no published versions")
-}
-
-func (vs Versions) Find(version string) (Version, error) {
-	for _, v := range vs {
-		if v.Version == version {
-			return v, nil
-		}
-	}
-
-	return Version{}, fmt.Errorf("version %q not found", version)
-}
-
-// Append a new version to versions.json file
-func AppendVersion(v Version) (Version, error) {
-	vs, err := GetVersions()
-
-	if err != nil {
-		return v, err
-	}
-
-	vs = append(vs, v)
-
-	err = putVersions(vs)
-
-	return v, err
-}
-
-// Get contents of public versions.json file into Versions type
-func GetVersions() (Versions, error) {
-	res, err := http.Get("http://convox.s3.amazonaws.com/release/versions.json")
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	b, err := ioutil.ReadAll(res.Body)
-
-	if err != nil {
-		return nil, err
-	}
-
-	vs := Versions{}
-	json.Unmarshal(b, &vs)
-
-	return vs, nil
-}
-
-func NextVersion(curr string) (string, error) {
-	vs, err := GetVersions()
-
-	if err != nil {
-		return "", err
-	}
-
-	v, err := vs.Next(curr)
-
-	return v, err
-}
-
-func UpdateVersion(v Version) (Version, error) {
-	vs, err := GetVersions()
-
-	if err != nil {
-		return v, err
-	}
-
-	for i, _ := range vs {
-		if vs[i].Version == v.Version {
-			vs[i].Published = v.Published
-			vs[i].Required = v.Required
-
-			err := putVersions(vs)
-
-			return vs[i], err
-		}
-	}
-
-	return v, fmt.Errorf("version %q not found", v.Version)
 }
 
 // Walk a bucket to create initial versions.json file
