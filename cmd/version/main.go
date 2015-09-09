@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/convox/release/version"
 )
 
 func main() {
@@ -22,7 +24,7 @@ func main() {
 }
 
 func cmdList() {
-	vs, err := GetVersions()
+	vs, err := version.GetVersions()
 
 	if err != nil {
 		fmt.Printf("error: %v\n", err.Error())
@@ -54,20 +56,20 @@ func cmdList() {
 }
 
 func cmdCreate(published bool, required bool) {
-	version := flag.Arg(1)
+	vv := flag.Arg(1)
 
-	if version == "" {
+	if vv == "" {
 		fmt.Printf("usage: version [-publish] [-require] create 20150906195708\n")
 		os.Exit(1)
 	}
 
-	v := Version{
-		Version:   version,
+	v := version.Version{
+		Version:   vv,
 		Published: published,
 		Required:  required,
 	}
 
-	v, err := AppendVersion(v)
+	v, err := version.AppendVersion(v)
 
 	if err != nil {
 		fmt.Printf("error: %v\n", err.Error())
@@ -78,9 +80,9 @@ func cmdCreate(published bool, required bool) {
 }
 
 func cmdUpdate(published bool, required bool) {
-	version := flag.Arg(1)
+	vv := flag.Arg(1)
 
-	if version == "" {
+	if vv == "" {
 		fmt.Printf("usage: version [-publish] [-require] update 20150906195708\n")
 		os.Exit(1)
 	}
@@ -90,13 +92,13 @@ func cmdUpdate(published bool, required bool) {
 		os.Exit(1)
 	}
 
-	v := Version{
-		Version:   version,
+	v := version.Version{
+		Version:   vv,
 		Published: published,
 		Required:  required,
 	}
 
-	v, err := UpdateVersion(v)
+	v, err := version.UpdateVersion(v)
 
 	if err != nil {
 		fmt.Printf("error: %v\n", err.Error())
