@@ -23,8 +23,8 @@ At any time you can build artifacts:
 
 ```bash
 $ convox switch demo.convox.io
-$ convox run --app release release cli
-$ convox run --app release release kernel
+$ convox run --app release --attach release cli
+$ convox run --app release --attach release kernel
 ```
 
 **Note the lack of flags.**
@@ -57,7 +57,7 @@ When you are confident that the artifacts will be an awesome experience for user
 
 ```bash
 $ convox switch demo.convox.io
-$ convox run --app release release version -publish 20150901101300
+$ convox run --app release --attach release version -publish 20150901101300
 ```
 
 **Note the explicit `-publish` flag.**
@@ -70,7 +70,7 @@ Some CloudFormation templates are required for migration purposes. To denote a "
 
 ```bash
 $ convox switch demo.convox.io
-$ convox run --app release release version -publish -require 20150901101300
+$ convox run --app release --attach release version -publish -require 20150901101300
 ```
 
 **Note the explicit `-publish` and `-require` flag.**
@@ -88,7 +88,7 @@ together.
 
 ```bash
 $ convox switch demo.convox.io
-$ convox run --app release release kernel --branch multi-region
+$ convox run --app release --attach release kernel --branch multi-region
 ```
 
 **Note the `--branch` flag.**
