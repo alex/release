@@ -4,8 +4,12 @@ Every artifact is built and tagged with a timestamp in a "YYYYMMDDHHMMSS" format
 
 Some artifacts also have a branch suffix in a "YYYYMMDDHHMMSS-branch-name" format.
 
-* Kernel CloudFormation template on s3://convox/release/20150902130909/formation.json
-* Kernel Lambda binary on s3://convox/release/20150902130909/formation.zip
+* Kernel CloudFormation template on `s3://convox/release/20150902130909/formation.json`
+* Kernel Lambda binary on `s3://convox/release/20150902130909/formation.zip`
+* Kernel Lambda binary on `s3://convox-us-east-1/release/20150909170143/formation.zip`
+* Kernel Lambda binary on `s3://convox-us-west-2/release/20150909170143/formation.zip`
+* Kernel Lambda binary on `s3://convox-eu-west-1/release/20150909170143/formation.zip`
+* Kernel Lambda binary on `s3://convox-ap-northeast-1/release/20150909170143/formation.zip`
 * `app`, `build`, `kernel`, `registry`, and `service` images tagged with "20150902130909" on Docker Hub
 * A kernel CloudFormation template on s3://convox/release/20150902130909/formation.json
 * A kernel Lambda binary on s3://convox/release/20150902130909/formation.zip
