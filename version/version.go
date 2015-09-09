@@ -1,15 +1,15 @@
-package main
+package version
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
@@ -28,8 +28,7 @@ func (v Version) Display() string {
 
 func (vs Versions) Next(curr string) (string, error) {
 	found := false
-	nextRequired := ""
-	nextPublished := ""
+	published := ""
 
 	for _, v := range vs {
 		if v.Version == curr {
@@ -38,11 +37,10 @@ func (vs Versions) Next(curr string) (string, error) {
 		}
 
 		if found && v.Published {
-			nextPublished = v.Version
+			published = v.Version
 
 			if v.Required {
-				nextRequired = v.Version
-				break
+				return v.Version, nil
 			}
 		}
 	}
@@ -51,12 +49,8 @@ func (vs Versions) Next(curr string) (string, error) {
 		return "", fmt.Errorf("current version %q not found", curr)
 	}
 
-	if nextRequired != "" {
-		return nextRequired, nil
-	}
-
-	if nextPublished != "" {
-		return nextPublished, nil
+	if published != "" {
+		return published, nil
 	}
 
 	return "", fmt.Errorf("current version %q is latest", curr)
@@ -99,6 +93,40 @@ func AppendVersion(v Version) (Version, error) {
 	return v, err
 }
 
+// Get contents of public versions.json file into Versions type
+func GetVersions() (Versions, error) {
+	res, err := http.Get("http://convox.s3.amazonaws.com/release/versions.json")
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	b, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	vs := Versions{}
+	json.Unmarshal(b, &vs)
+
+	return vs, nil
+}
+
+func NextVersion(curr string) (string, error) {
+	vs, err := GetVersions()
+
+	if err != nil {
+		return "", err
+	}
+
+	v, err := vs.Next(curr)
+
+	return v, err
+}
+
 func UpdateVersion(v Version) (Version, error) {
 	vs, err := GetVersions()
 
@@ -121,9 +149,7 @@ func UpdateVersion(v Version) (Version, error) {
 }
 
 // Walk a bucket to create initial versions.json file
-func ImportVersions() (Versions, error) {
-	vs := Versions{}
-
+func importVersions() (Versions, error) {
 	S3 := s3.New(&aws.Config{
 		Region: aws.String(os.Getenv("AWS_DEFAULT_REGION")),
 	})
@@ -137,6 +163,8 @@ func ImportVersions() (Versions, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	vs := Versions{}
 
 	for _, p := range res.CommonPrefixes {
 		parts := strings.Split(*p.Prefix, "/")
@@ -156,33 +184,6 @@ func ImportVersions() (Versions, error) {
 	err = putVersions(vs)
 
 	return vs, err
-}
-
-func GetVersions() (Versions, error) {
-	vs := Versions{}
-
-	S3 := s3.New(&aws.Config{
-		Region: aws.String(os.Getenv("AWS_DEFAULT_REGION")),
-	})
-
-	res, err := S3.GetObject(&s3.GetObjectInput{
-		Bucket: aws.String("convox"),
-		Key:    aws.String("release/versions.json"),
-	})
-
-	if err != nil && err.(awserr.Error).Code() != "NoSuchKey" {
-		return nil, err
-	} else {
-		b, err := ioutil.ReadAll(res.Body)
-
-		if err != nil {
-			return nil, err
-		}
-
-		json.Unmarshal(b, &vs)
-	}
-
-	return vs, nil
 }
 
 func putVersions(vs Versions) error {

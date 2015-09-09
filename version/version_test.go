@@ -1,4 +1,4 @@
-package main
+package version
 
 import (
 	"fmt"
@@ -6,20 +6,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 )
-
-func TestImportVersions(t *testing.T) {
-	t.Skip("Currently only runs with real credentials. Skipping until awsutil integration.")
-
-	vs, err := ImportVersions()
-
-	if err != nil {
-		t.Error(err)
-	}
-
-	latest, err := vs.Latest()
-	assert.Equal(t, "", latest.Version)
-	assert.EqualError(t, err, "no published versions")
-}
 
 func TestAppendVersion(t *testing.T) {
 	t.Skip("Currently only runs with real credentials. Skipping until awsutil integration.")
