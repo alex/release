@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/convox/kernel/Godeps/_workspace/src/github.com/codegangsta/negroni"
-	"github.com/convox/kernel/Godeps/_workspace/src/github.com/gorilla/mux"
+	"github.com/codegangsta/negroni"
+	"github.com/gorilla/mux"
 )
 
 func main() {
