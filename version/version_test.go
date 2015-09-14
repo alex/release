@@ -7,6 +7,46 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestResolve(t *testing.T) {
+	vs := Versions{
+		Version{
+			Version:   "1",
+			Published: true,
+			Required:  false,
+		},
+		Version{
+			Version:   "2",
+			Published: false,
+			Required:  false,
+		},
+		Version{
+			Version:   "3",
+			Published: true,
+			Required:  false,
+		},
+		Version{
+			Version:   "4",
+			Published: false,
+			Required:  false,
+		},
+		Version{
+			Version:   "5",
+			Published: false,
+			Required:  false,
+		},
+	}
+
+	resolved, err := vs.Resolve("latest")
+	if assert.Nil(t, err) {
+		assert.Equal(t, "3", resolved.Version)
+	}
+
+	resolved, err = vs.Resolve("edge")
+	if assert.Nil(t, err) {
+		assert.Equal(t, "5", resolved.Version)
+	}
+}
+
 func TestAppendVersion(t *testing.T) {
 	t.Skip("Currently only runs with real credentials. Skipping until awsutil integration.")
 

@@ -22,6 +22,18 @@ type Version struct {
 
 type Versions []Version
 
+func (vs Versions) Resolve(version string) (v Version, err error) {
+	switch version {
+	case "latest":
+		v, err = vs.Latest()
+	case "edge":
+		v = vs[len(vs)-1]
+	default:
+		v, err = vs.Find(version)
+	}
+	return
+}
+
 // Get all versions as Versions type
 func All() (Versions, error) {
 	res, err := http.Get("http://convox.s3.amazonaws.com/release/versions.json")
