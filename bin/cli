@@ -20,11 +20,9 @@ sed -i -e "s/\"dev\"/\"${tag}\"/g" cmd/convox/main.go
 
 make convox
 
-# /go/bin/go-bindata -o cmd/convox/asset.go -prefix convox cmd/convox/data
-
 equinox release --equinox-account=$EQUINOX_ACCOUNT --equinox-secret=$EQUINOX_SECRET \
   --equinox-app=$EQUINOX_APP --channel=stable \
-  --platforms="linux_386 linux_amd64 darwin_amd64" --version=$tag /go/bin/convox
+  --platforms="linux_386 linux_amd64 darwin_amd64" --version=$tag ./cmd/convox
 
 echo "cli released: $tag"
 
