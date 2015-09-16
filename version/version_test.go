@@ -41,6 +41,11 @@ func TestResolve(t *testing.T) {
 		assert.Equal(t, "3", resolved.Version)
 	}
 
+	resolved, err = vs.Resolve("stable")
+	if assert.Nil(t, err) {
+		assert.Equal(t, "3", resolved.Version)
+	}
+
 	resolved, err = vs.Resolve("edge")
 	if assert.Nil(t, err) {
 		assert.Equal(t, "5", resolved.Version)

@@ -23,10 +23,10 @@ type Version struct {
 type Versions []Version
 
 func (vs Versions) Resolve(version string) (v Version, err error) {
-	switch version {
-	case "latest":
+	switch {
+	case version == "latest" || version == "stable":
 		v, err = vs.Latest()
-	case "edge":
+	case version == "edge":
 		v = vs[len(vs)-1]
 	default:
 		v, err = vs.Find(version)
