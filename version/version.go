@@ -97,6 +97,18 @@ func AppendVersion(v Version) (Version, error) {
 	return v, err
 }
 
+func (vs Versions) Len() int {
+	return len(vs)
+}
+
+func (vs Versions) Less(i, j int) bool {
+	return vs[i].Version < vs[j].Version
+}
+
+func (vs Versions) Swap(i, j int) {
+	vs[i], vs[j] = vs[j], vs[i]
+}
+
 func (v Version) Display() string {
 	return fmt.Sprintf("%s (published: %v, required: %v)", v.Version, v.Published, v.Required)
 }

@@ -2,6 +2,7 @@ package version
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -183,4 +184,23 @@ func TestNextBadVersionData(t *testing.T) {
 	latest, err := vs.Latest()
 	assert.Equal(t, "", latest.Version)
 	assert.EqualError(t, err, `no published versions`)
+}
+
+func TestSortVersions(t *testing.T) {
+	vs := Versions{
+		Version{
+			Version:   "2",
+			Published: true,
+		},
+		Version{
+			Version:   "1",
+			Published: false,
+			Required:  true, // Required but not Published makes no sense
+		},
+	}
+
+	sort.Sort(vs)
+
+	assert.Equal(t, "1", vs[0].Version)
+	assert.Equal(t, "2", vs[1].Version)
 }
