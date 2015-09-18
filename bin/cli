@@ -18,7 +18,7 @@ tag=$(date +%Y%m%d%H%M%S)
 
 sed -i -e "s/\"dev\"/\"${tag}\"/g" cmd/convox/main.go
 
-make convox
+go get -t ./cmd/convox
 
 equinox release --equinox-account=$EQUINOX_ACCOUNT --equinox-secret=$EQUINOX_SECRET \
   --equinox-app=$EQUINOX_APP --channel=stable \
