@@ -3,6 +3,7 @@
 set -x
 
 VERSION=${1:-latest}
+BRANCH=${2:-master}
 
 curl \
   --header "Content-Type: application/json" \
