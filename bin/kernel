@@ -76,4 +76,4 @@ echo "kernel released: $V"
 
 curl -s -X POST -d "payload={\"text\":\"kernel released: $V\"}" $SLACK_WEBHOOK_URL
 
-ci $tag
+ci $tag $BRANCH
