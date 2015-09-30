@@ -7,6 +7,6 @@ BRANCH=${2:-master}
 
 curl \
   --header "Content-Type: application/json" \
-  --data "{\"build_parameters\": {\"VERSION\": \"$VERSION\"}}" \
+  --data "{\"build_parameters\": {\"RUN_AWS\": \"true\", \"VERSION\": \"$VERSION\"}}" \
   --request POST \
-  https://circleci.com/api/v1/project/convox/ci/tree/master?circle-token=$CIRCLE_TOKEN
+  https://circleci.com/api/v1/project/convox/rack/tree/$BRANCH?circle-token=$CIRCLE_TOKEN
