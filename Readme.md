@@ -6,11 +6,10 @@ See [Releases.md](Releases.md) for full release management guidelines.
 
 ## Development
 
-Pre-reqs
+> You will need a `.env` with AWS, Circle, Docker, Equinox and Slack keys.
 
-* An .env file with AWS, Circle, Docker, Equinox and Slack keys.
 
-```bash
+```
 $ make build
 
 $ docker run --env-file=.env convox/release cli
@@ -19,30 +18,23 @@ $ docker run --env-file=.env convox/release kernel
 
 ## Production
 
-Deploy the app to Convox and set the env.
+#### Cut a release of the CLI
 
 ```
 $ convox run --app release release cli
+```
+
+#### Cut a release of the API
+
+```
 $ convox run --app release release kernel
 ```
 
-When CI has passed, you can cut a "latest" release, which every fresh install will use.
+#### Promote a release of the API to stable
 
 ```
-$ convox run --app release release kernel --latest
+$ convox run --app release release version -publish update $VERSION
 ```
-
-## Contributing
-
-* Open a [GitHub Issue](https://github.com/convox/release/issues/new) for bugs and feature requests
-* Initiate a [GitHub Pull Request](https://help.github.com/articles/using-pull-requests/) for patches
-
-## See Also
-
-* [convox/app](https://github.com/convox/app)
-* [convox/build](https://github.com/convox/build)
-* [convox/cli](https://github.com/convox/cli)
-* [convox/kernel](https://github.com/convox/kernel)
 
 ## License
 
