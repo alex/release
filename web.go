@@ -58,7 +58,21 @@ func main() {
 
 			rw.Write([]byte(fmt.Sprintf("creating release from `%s`", displayBranch)))
 		case "publish":
-			http.Error(rw, "not yet supported", 403)
+			if len(args) < 2 {
+				http.Error(rw, "must specify a version", 403)
+				return
+			}
+
+			version := args[1]
+
+			fmt.Printf("version %+v\n", version)
+
+			cmd := exec.Command("bin/publish", version)
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			go cmd.Run()
+
+			rw.Write([]byte(fmt.Sprintf("publishing release `%s`", version)))
 		case "":
 			http.Error(rw, "please specify a command (create, publish)", 403)
 		default:

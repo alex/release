@@ -3,24 +3,12 @@
 # get version from argument
 version=$1
 
+echo "versionn:$version"
+
 # check for version
-[ -n $version ] && (echo "usage: publish <version>"; exit 1)
+[ -z "$version" ] && echo "usage: publish <version>" && exit 1
 
-# docker login
-docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
-# setup temp dir
-tmp=$(mktemp -d -t release.XXXXX)
-
-# publish rack
-clone_mtime https://github.com/convox/rack $tmp/rack
-cd $tmp/rack && make publish VERSION=$V
-
-# publish registry
-clone_mtime https://github.com/convox/registry $tmp/registry
-cd $tmp/registry && make publish VERSION=$V
-
-version -publish update $tag
+version -publish update $version
 
 # notify
 echo "rack release published: $version"
