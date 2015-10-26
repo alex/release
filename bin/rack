@@ -1,0 +1,62 @@
+#!/bin/bash
+
+set -e
+
+clone_mtime() {
+  repo=$1
+  dir=$2
+
+  git clone $1 $2
+  pushd $2
+
+  [ -n "$BRANCH" ] && git checkout $BRANCH || true
+
+  /usr/bin/git-restore-mtime $2
+
+  popd
+}
+
+# parse arguments
+while [[ $# > 0 ]]; do
+  key="$1"; shift
+
+  case $key in
+    --branch)
+      BRANCH="$1"; shift
+      ;;
+    --publish)
+      VERSION="$1"; shift
+      ;;
+  esac
+done
+
+# generate date tag
+tag=$(date +%Y%m%d%H%M%S)
+
+# if using a branch add to tag and dont allow latest
+[ -n "$BRANCH" ] && tag=$tag-$BRANCH
+[ -n "$BRANCH" ] && PUBLISH=no
+
+# create the version
+V=$(version create $tag | tee)
+
+# setup temp dir
+tmp=$(mktemp -d -t release.XXXXX)
+
+# build rack
+clone_mtime https://github.com/convox/rack $tmp/rack
+cd $tmp/rack && make release
+
+# build registry
+clone_mtime https://github.com/convox/registry $tmp/registry
+cd $tmp/registry && make release
+
+if [ "${PUBLISH}" == "yes" ]; then
+  V=$(version -publish update $tag | tee)
+fi
+
+echo "kernel released: $V"
+
+# post notice to slack and start ci
+curl -s -X POST -d "payload={\"text\":\"kernel released: $V\"}" $SLACK_WEBHOOK_URL
+ci $tag $BRANCH

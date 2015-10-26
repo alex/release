@@ -1,0 +1,47 @@
+#!/bin/bash
+
+clone_mtime() {
+  repo=$1
+  dir=$2
+  branch=$3
+  mkdir -p $(dirname $2)
+  git clone $1 $2
+  pushd $2
+  [ -n "$branch" ] && git checkout $branch || true
+  /usr/bin/git-restore-mtime $2
+  popd
+}
+
+# get branch name argument
+branch=$1
+
+# generate date tag
+tag=$(date +%Y%m%d%H%M%S)
+
+# if using a branch add to tag
+[ -n "$branch" ] && tag=$tag-$branch
+
+# create the version
+version create $tag
+
+# setup temp dir
+tmp=$(mktemp -d -t release.XXXXX)
+
+# set GOPATH to tmp
+export GOPATH=$tmp
+
+# docker login
+docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+# build rack
+clone_mtime https://github.com/convox/rack $tmp/src/github.com/convox/rack $branch
+cd $tmp/src/github.com/convox/rack && make release VERSION=$tag
+
+# build registry
+clone_mtime https://github.com/convox/registry $tmp/registry $branch
+cd $tmp/registry && make release VERSION=$tag
+
+# notify and start ci
+echo "rack release created: $tag"
+curl -s -X POST -d "payload={\"text\":\"rack release created: $tag\"}" $SLACK_WEBHOOK_URL
+ci $tag $branch
