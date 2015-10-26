@@ -20,9 +20,10 @@ sed -i -e "s/\"dev\"/\"${tag}\"/g" cmd/convox/main.go
 
 go get -t ./cmd/convox
 
-equinox release --equinox-account=$EQUINOX_ACCOUNT --equinox-secret=$EQUINOX_SECRET \
-  --equinox-app=$EQUINOX_APP --channel=stable \
-  --platforms="linux_386 linux_amd64 darwin_amd64" --version=$tag ./cmd/convox
+echo -e "$EQUINOX_SIGNING_KEY" > cli_signing.key
+equinox release --app=$EQUINOX_APP_ID --token=$EQUINOX_TOKEN --channel=stable \
+  --platforms="linux_386 linux_amd64 darwin_amd64" --version=$tag \
+  --signing-key cli_signing.key ./cmd/convox
 
 echo "cli released: $tag"
 
