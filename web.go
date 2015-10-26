@@ -39,7 +39,7 @@ func main() {
 
 		switch args[0] {
 		case "create":
-			branch := "master"
+			branch := ""
 
 			if len(args) > 1 {
 				branch = args[1]
@@ -50,7 +50,13 @@ func main() {
 			cmd.Stderr = os.Stderr
 			go cmd.Run()
 
-			rw.Write([]byte(fmt.Sprintf("creating release from `%s`", branch)))
+			displayBranch := branch
+
+			if displayBranch == "" {
+				displayBranch = "master"
+			}
+
+			rw.Write([]byte(fmt.Sprintf("creating release from `%s`", displayBranch)))
 		case "publish":
 			http.Error(rw, "not yet supported", 403)
 		case "":
