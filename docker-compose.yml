@@ -5,13 +5,18 @@ release:
     - AWS_DEFAULT_REGION
     - AWS_SECRET_ACCESS_KEY
     - CIRCLE_TOKEN
+    - DEVELOPMENT=true
     - DOCKER_EMAIL
     - DOCKER_USERNAME
     - DOCKER_PASSWORD
     - EQUINOX_ACCOUNT
     - EQUINOX_APP
     - EQUINOX_SECRET
+    - SLACK_INCOMING_WEBHOOK_TOKEN
     - SLACK_WEBHOOK_URL
+  ports:
+    - 80:5000
+    - 443:5000
   volumes:
     - .:/go/src/github.com/convox/release
     - /var/run/docker.sock:/var/run/docker.sock

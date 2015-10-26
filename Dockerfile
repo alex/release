@@ -20,6 +20,7 @@ RUN pip install awscli
 ENV GOPATH /go
 ENV PATH $PATH:$GOPATH/bin:/usr/local/go/bin:/go/src/github.com/convox/release/bin
 
+RUN go get github.com/ddollar/rerun
 RUN go get github.com/jteeuwen/go-bindata/...
 
 COPY bin/git-restore-mtime /usr/bin/git-restore-mtime
@@ -30,4 +31,4 @@ COPY . /go/src/github.com/convox/release
 WORKDIR /go/src/github.com/convox/release
 RUN go get ./...
 
-CMD ["/go/bin/release"]
+CMD ["bin/web"]
