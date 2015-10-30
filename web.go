@@ -7,8 +7,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/codegangsta/negroni"
-	"github.com/gorilla/mux"
+	"github.com/convox/release/Godeps/_workspace/src/github.com/codegangsta/negroni"
+	"github.com/convox/release/Godeps/_workspace/src/github.com/gorilla/mux"
 )
 
 func main() {

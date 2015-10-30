@@ -9,5 +9,8 @@ cli:
 rack:
 	convox run --app release release kernel
 
+vendor:
+	godep save -r ./...
+
 test:
 	go test -v ./...

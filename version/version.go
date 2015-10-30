@@ -9,8 +9,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/convox/release/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws"
+	"github.com/convox/release/Godeps/_workspace/src/github.com/aws/aws-sdk-go/service/s3"
 )
 
 type Version struct {
