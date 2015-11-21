@@ -4,15 +4,14 @@ RUN apt-get -y update
 
 RUN apt-get -y install docker.io git python
 
-RUN apt-get install -y curl unzip
+RUN apt-get install -y curl
 
 RUN curl https://storage.googleapis.com/golang/go1.5.linux-amd64.tar.gz -O
 RUN tar -C /usr/local -xzf go1.5.linux-amd64.tar.gz
 
 WORKDIR /tmp
-RUN curl -Ls 'https://api.equinox.io/1/Applications/ap_y4Se864kD0m4rFttBjDpTeahC1/Updates/Asset/equinox.zip?os=linux&arch=386&channel=stable' -o equinox.zip
-RUN unzip equinox.zip
-RUN cp equinox /usr/bin/equinox
+RUN curl https://bin.equinox.io/c/mBWdkfai63v/equinox-stable-linux-386.tar.gz -O
+RUN tar xvzf equinox-stable-linux-386.tar.gz -C /usr/bin
 
 RUN apt-get -y install jq make python python-pip zip
 RUN pip install awscli
