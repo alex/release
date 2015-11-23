@@ -1,6 +1,31 @@
 # convox/release
 
-Convox release management
+Convox release management.
+
+To release via Slack:
+
+    /release create [branch] | publish <version>
+
+    /release create my-branch
+    /release create
+    /release publish 20151123210132
+
+
+To release via Convox:
+
+    $ convox run --app release release create my-branch
+    $ convox run --app release release create
+    $ convox run --app release release publish 20151123210132
+
+
+The release workflow is:
+
+* Create a Pull Request on Rack with a patch
+* Create a release with the branch name
+* `convox rack update 20151123210132-my-branch` to test the release
+* Merge the pull request into master
+* Release Rack from master
+* Publish the resulting release number
 
 See [Releases.md](Releases.md) for full release management guidelines.
 
