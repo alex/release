@@ -3,7 +3,7 @@
 # get version from argument
 version=$1
 
-echo "versionn:$version"
+echo "version:$version"
 
 # check for version
 [ -z "$version" ] && echo "usage: publish <version>" && exit 1
